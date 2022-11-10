@@ -3,16 +3,57 @@ import styled from "styled-components";
 
 
 export default class Product extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            product : props.product,
+            updated : 0
+        }
+        this.addPrice = this.addPrice.bind(this)
+    }
+
+    componentDidMount(){
+        console.log("I have finishing rendering " +this.props.product.name + "  Price "+ this.state.product.price);
+    }
+
+    componentDidUpdate(){
+        console.log("I have been updated " + this.state.updated +" times");
+    }
+
+    componentWillUnmount() {
+        console.log("I'm being destroyed");
+     }
+     addPrice(e){
+        e.preventDefault();
+        this.setState(prevState=>( {
+
+            product:{
+                ...prevState.product,
+                /* !!!!!!!!!!!!!!!!!!!!!*/ 
+                price : Number(prevState.product.price) + 0.1
+            },
+            updated : prevState.updated+1
+        }));
+     }
     render(){
       
         return  (
                     <ProductFrame>
                         <ProductImageWrapper>
-                            <ProductImage src={this.props.product.img}></ProductImage>
+                            <ProductImage src={this.state.product.img}></ProductImage>
                         </ProductImageWrapper>
                         <ProductInfoWrapper>
-                            <span>{this.props.product.name}</span>
-                            <span>{this.props.product.price}</span>
+                            <span>
+                                <a href={"/product/" +this.state.product.name}>
+                                {this.state.product.name}
+                                </a>
+                            </span>
+                            <span>
+                                {this.state.product.price}{" *"}
+                                {Number(this.state.product.price) > 2 ? "expensive" :"Promo"}
+                            
+                            </span>
+                            <button onClick={this.addPrice}>Add 0.1</button>
                         </ProductInfoWrapper>
             
                     </ProductFrame>
